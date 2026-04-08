@@ -30,8 +30,9 @@ async function fetchDashboardData(symbol) {
 function updateUI(data) {
     if(!data) return;
 
-    // 0. Update Timestamp
+    // 0. Update Timestamp and Spot Price
     document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
+    document.getElementById('spot-price-display').textContent = data.spotPrice.toFixed(2);
 
     // 1. Update Signal
     const { signal } = data;
