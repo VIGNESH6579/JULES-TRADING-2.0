@@ -1,7 +1,7 @@
 // Automatically switch between Localhost and Render production backend
 const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
     ? 'http://localhost:8080/api' 
-    : 'https://jules-trading-2-0-1.onrender.com'; // Replace with your actual Render URL later
+    : 'https://jules-trading-2-0-1.onrender.com/api';
 
 const elements = {
     chainBody: document.getElementById('chain-body'),
