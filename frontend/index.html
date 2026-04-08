@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JULES TRADING 2.0 | Option Analytics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <header class="top-nav">
+        <div class="logo">JULES TRADING <span>PRO</span></div>
+        <div class="market-status">
+            <span class="pulse-dot"></span>
+            LIVE MARKET
+        </div>
+    </header>
+
+    <main class="dashboard">
+        
+        <!-- Strategy Wizard Section -->
+        <section class="panel strategy-wizard">
+            <h2>Strategy Wizard <span class="badge">AI</span></h2>
+            <div id="signal-card" class="signal-card neutral">
+                <div class="signal-direction">NEUTRAL</div>
+                <div class="signal-details">
+                    <div class="target-box">TARGET: <span id="target-val">--</span></div>
+                    <div class="sl-box">SL: <span id="sl-val">--</span></div>
+                </div>
+                <div class="signal-rationale">Waiting for clear PCR and OI buildup alignment...</div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-box">
+                    <span class="label">Put-Call Ratio (PCR)</span>
+                    <strong id="pcr-val">--</strong>
+                    <div class="gauge-bar"><div class="fill" id="pcr-gauge" style="width: 50%;"></div></div>
+                </div>
+                <div class="metric-box">
+                    <span class="label">Max Pain</span>
+                    <strong id="max-pain-val">--</strong>
+                </div>
+                <div class="metric-box">
+                    <span class="label">IV Rank</span>
+                    <strong id="iv-rank-val">--</strong>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dynamic Option Chain Table -->
+        <section class="panel option-chain">
+            <div class="section-header">
+                <h2>Live Option Chain</h2>
+                <div class="controls">
+                    <select id="index-select">
+                        <option value="NIFTY">NIFTY</option>
+                        <option value="BANKNIFTY">BANKNIFTY</option>
+                        <option value="SENSEX">SENSEX</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <table id="chain-table">
+                    <thead>
+                        <tr>
+                            <!-- CALLS -->
+                            <th>OI Buildup</th>
+                            <th>Gamma</th>
+                            <th>Vega</th>
+                            <th>Theta</th>
+                            <th>Delta</th>
+                            <th>Call LTP</th>
+                            <th class="strike-col">STRIKE</th>
+                            <!-- PUTS -->
+                            <th>Put LTP</th>
+                            <th>Delta</th>
+                            <th>Theta</th>
+                            <th>Vega</th>
+                            <th>Gamma</th>
+                            <th>OI Buildup</th>
+                        </tr>
+                    </thead>
+                    <tbody id="chain-body">
+                        <!-- Rows populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Straddle Breakout / Alerts -->
+        <section class="panel straddle-alerts">
+            <h2>Alerts Feed</h2>
+            <div class="alert-list" id="alert-list">
+                <!-- Alerts populated by JS -->
+                <div class="alert-item info">Scanning for Straddle Breakouts...</div>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="./js/app.js"></script>
+</body>
+</html>
