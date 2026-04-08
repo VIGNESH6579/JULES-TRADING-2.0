@@ -30,6 +30,9 @@ async function fetchDashboardData(symbol) {
 function updateUI(data) {
     if(!data) return;
 
+    // 0. Update Timestamp
+    document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
+
     // 1. Update Signal
     const { signal } = data;
     elements.signalCard.className = `signal-card ${signal.action.toLowerCase()}`;

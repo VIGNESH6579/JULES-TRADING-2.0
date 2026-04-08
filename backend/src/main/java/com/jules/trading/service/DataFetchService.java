@@ -21,7 +21,11 @@ public class DataFetchService {
     public List<OptionRow> getSimulatedOptionChain(String symbol, double currentSpot) {
         List<OptionRow> chain = new ArrayList<>();
         
-        double step = symbol.equals("NIFTY") ? 50 : 100;
+        double step = 50;
+        if (symbol.equals("BANKNIFTY") || symbol.equals("SENSEX")) step = 100;
+        if (symbol.equals("CRUDEOIL")) step = 20; // smaller strikes for MCX
+        if (symbol.equals("NATGAS")) step = 1;
+
         double baseStrike = Math.round(currentSpot / step) * step;
         
         // Generate strikes around spot

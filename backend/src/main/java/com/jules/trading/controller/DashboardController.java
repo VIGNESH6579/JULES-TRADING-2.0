@@ -29,6 +29,8 @@ public class DashboardController {
     private double currentNifty = 22400.0;
     private double currentBankNifty = 47800.0;
     private double currentSensex = 73900.0;
+    private double currentCrudeOil = 6800.0;
+    private double currentNatGas = 220.0;
 
     @GetMapping("/dashboard")
     public DashboardResponse getDashboard(@RequestParam(defaultValue = "NIFTY") String symbol) {
@@ -61,6 +63,12 @@ public class DashboardController {
             case "SENSEX":
                 currentSensex += (drift * 3.5);
                 return currentSensex;
+            case "CRUDEOIL":
+                currentCrudeOil += (drift * 0.5); // Smaller drift
+                return currentCrudeOil;
+            case "NATGAS":
+                currentNatGas += (drift * 0.05); // Tiny drift
+                return currentNatGas;
             default:
                 return currentNifty;
         }
