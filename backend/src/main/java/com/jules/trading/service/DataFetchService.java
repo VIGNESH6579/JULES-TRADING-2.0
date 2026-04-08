@@ -15,10 +15,13 @@ public class DataFetchService {
     @Autowired
     private BlackScholesEngine bsEngine;
 
-    private final Random random = new Random();
+    @Autowired
+    private AngelAuthService angelAuthService;
 
-    // Mock Live Data to bypass aggressive NSE blockades while demonstrating full capability
     public List<OptionRow> getSimulatedOptionChain(String symbol, double currentSpot) {
+        // Attempt to login to Angel One in background if keys exist
+        angelAuthService.login();
+
         List<OptionRow> chain = new ArrayList<>();
         
         double step = 50;
