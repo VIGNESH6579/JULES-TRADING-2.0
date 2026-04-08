@@ -17,8 +17,19 @@ const elements = {
 };
 
 async function fetchDashboardData(symbol) {
+    // Basic frontend guard
+    if (localStorage.getItem('auth') !== 'true') {
+        window.location.href = 'login.html';
+        return;
+    }
+
     try {
         const response = await fetch(`${API_BASE}/dashboard?symbol=${symbol}`);
+        if (response.status === 401) {
+            localStorage.removeItem('auth');
+            window.location.href = 'login.html';
+            return;
+        }
         if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
         updateUI(data);

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JULES TRADING 2.0 | Connect Broker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/style.css">
+    <style>
+        .login-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-card {
+            background: rgba(22, 24, 31, 0.8);
+            border: 1px solid var(--border-color);
+            padding: 3rem;
+            border-radius: 16px;
+            width: 450px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            backdrop-filter: var(--blur-effect);
+        }
+        .login-title {
+            font-family: 'Outfit', sans-serif;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .login-title h1 {
+            font-size: 1.8rem;
+            color: white;
+            font-weight: 800;
+        }
+        .login-title span {
+            color: var(--accent-blue);
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus {
+            border-color: var(--accent-blue);
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--accent-blue), #2563eb);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 1rem;
+        }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+        }
+        .error-msg {
+            color: var(--bearish-color);
+            background: var(--bearish-bg);
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+            display: none;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-wrapper">
+        <div class="login-card">
+            <div class="login-title">
+                <h1>JULES TRADING <span>PRO</span></h1>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 5px;">Connect Angel One SmartAPI</p>
+            </div>
+            
+            <div id="error-box" class="error-msg"></div>
+
+            <form id="login-form">
+                <div class="form-group">
+                    <label>Client ID</label>
+                    <input type="text" id="clientId" placeholder="e.g. VIG1234" required>
+                </div>
+                <div class="form-group">
+                    <label>PIN / Password</label>
+                    <input type="password" id="pin" placeholder="Enter PIN" required>
+                </div>
+                <div class="form-group">
+                    <label>SmartAPI Key</label>
+                    <input type="password" id="apiKey" placeholder="Your API Key" required>
+                </div>
+                <div class="form-group">
+                    <label>TOTP Secret (Base32)</label>
+                    <input type="password" id="totpSecret" placeholder="e.g. JBSWY3DPEHPK3PXP" required>
+                </div>
+                <button type="submit" class="submit-btn" id="submit-btn">Connect to Broker</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="./js/login.js"></script>
+</body>
+</html>

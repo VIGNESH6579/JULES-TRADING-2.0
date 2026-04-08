@@ -21,9 +21,6 @@ public class DataFetchService {
     private final Random random = new Random();
 
     public List<OptionRow> getSimulatedOptionChain(String symbol, double currentSpot) {
-        // Attempt to login to Angel One in background if keys exist
-        angelAuthService.login();
-
         List<OptionRow> chain = new ArrayList<>();
         
         double step = 50;

@@ -1,7 +1,6 @@
 package com.jules.trading.service;
 
-import com.jules.trading.config.AngelOneConfig;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.jules.trading.dto.LoginRequest;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -12,14 +11,12 @@ import java.util.Map;
 @Service
 public class AngelAuthService {
 
-    @Autowired
-    private AngelOneConfig config;
-
     private String jwtToken;
+    private boolean isConnected = false;
 
-    public boolean login() {
-        if (config.getApiKey() == null || config.getApiKey().isEmpty() || config.getTotpSecret() == null) {
-            return false; // Keys not provided, stick to simulated fallback
+    public boolean login(LoginRequest request) {
+        if (request.getApiKey() == null || request.getTotpSecret() == null) {
+            return false; 
         }
 
         try {
@@ -32,25 +29,26 @@ public class AngelAuthService {
             headers.set("X-ClientLocalIP", "127.0.0.1");
             headers.set("X-ClientPublicIP", "127.0.0.1");
             headers.set("X-MACAddress", "11-22-33-44-55-66");
-            headers.set("X-PrivateKey", config.getApiKey());
+            headers.set("X-PrivateKey", request.getApiKey());
 
-            String totp = TotpGenerator.getTotpCode(config.getTotpSecret());
+            String totp = TotpGenerator.getTotpCode(request.getTotpSecret());
 
             Map<String, String> body = new HashMap<>();
-            body.put("clientcode", config.getClientId());
-            body.put("password", config.getPin());
+            body.put("clientcode", request.getClientId());
+            body.put("password", request.getPin());
             body.put("totp", totp);
 
-            HttpEntity<Map<String, String>> request = new HttpEntity<>(body, headers);
+            HttpEntity<Map<String, String>> httpRequest = new HttpEntity<>(body, headers);
 
             ResponseEntity<Map> response = restTemplate.postForEntity(
                     "https://apiconnect.angelbroking.com/rest/auth/angelbroking/user/v1/loginByPassword",
-                    request, Map.class);
+                    httpRequest, Map.class);
 
             if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
                 Map<String, Object> data = (Map<String, Object>) response.getBody().get("data");
                 if (data != null) {
                     this.jwtToken = (String) data.get("jwtToken");
+                    this.isConnected = true;
                     System.out.println("✅ Successfully Authenticated with Angel One SmartAPI!");
                     return true;
                 }
@@ -61,8 +59,11 @@ public class AngelAuthService {
         return false;
     }
 
+    public boolean isConnected() {
+        return isConnected;
+    }
+
     public String getJwtToken() {
-        if (jwtToken == null) login();
         return jwtToken;
     }
 }

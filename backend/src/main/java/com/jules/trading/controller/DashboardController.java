@@ -23,6 +23,9 @@ public class DashboardController {
     @Autowired
     private OptionsAnalyzerService analyzerService;
 
+    @Autowired
+    private AngelAuthService angelAuthService;
+
     private final Random random = new Random();
     
     // Simulate Spot drift
@@ -33,8 +36,14 @@ public class DashboardController {
     private double currentNatGas = 220.0;
 
     @GetMapping("/dashboard")
-    public DashboardResponse getDashboard(@RequestParam(defaultValue = "NIFTY") String symbol) {
+    public ResponseEntity<?> getDashboard(@RequestParam(defaultValue = "NIFTY") String symbol) {
         
+        if (!angelAuthService.isConnected()) {
+            Map<String, String> err = new HashMap<>();
+            err.put("error", "Not connected to Angel One. Please login first.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
+        }
+
         double spotPrice = updateAndGetSpot(symbol);
         
         List<OptionRow> chain = dataService.getSimulatedOptionChain(symbol, spotPrice);
@@ -48,7 +57,7 @@ public class DashboardController {
         response.setAnalytics(analytics);
         response.setSignal(signal);
 
-        return response;
+        return ResponseEntity.ok(response);
     }
 
     private double updateAndGetSpot(String symbol) {
