@@ -1,0 +1,4 @@
+[build]
+  # Direct Netlify to serve the 'frontend' folder automatically
+  publish = "frontend"
+  command = ""
