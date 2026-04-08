@@ -9,6 +9,15 @@ public class TotpGenerator {
 
     public static String getTotpCode(String secretKey) {
         if (secretKey == null || secretKey.isEmpty()) return "000000";
+        
+        // Strip out any spaces the user accidentally typed
+        secretKey = secretKey.trim().replaceAll(" ", "").toUpperCase();
+
+        // If the user entered the 6-digit pin from Google Authenticator manually
+        if (secretKey.length() == 6 && secretKey.matches("\\d+")) {
+            return secretKey;
+        }
+
         try {
             Base32 base32 = new Base32();
             byte[] bytes = base32.decode(secretKey);
