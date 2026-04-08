@@ -9,6 +9,7 @@ public class DashboardResponse {
     private double spotPrice;
     private String expiryDate;
     private int daysToExpiry;
+    private List<String> availableExpiries;
     private Signal signal;
     private Analytics analytics;
     private List<OptionRow> chain;

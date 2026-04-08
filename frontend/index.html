@@ -59,13 +59,16 @@
         <section class="panel option-chain">
             <div class="section-header">
                 <h2>Live Option Chain</h2>
-                <div class="controls">
-                    <select id="index-select">
+                <div class="controls" style="display:flex; gap:10px;">
+                    <select id="index-select" style="padding: 5px; border-radius: 5px; background: rgba(0,0,0,0.5); color: white; border: 1px solid var(--border-color);">
                         <option value="NIFTY">NIFTY</option>
                         <option value="BANKNIFTY">BANKNIFTY</option>
                         <option value="SENSEX">SENSEX</option>
                         <option value="CRUDEOIL">CRUDE OIL (MCX)</option>
                         <option value="NATGAS">NATURAL GAS (MCX)</option>
+                    </select>
+                    <select id="expiry-select" style="padding: 5px; border-radius: 5px; background: rgba(0,0,0,0.5); color: white; border: 1px solid var(--border-color);">
+                        <option value="">Loading...</option>
                     </select>
                 </div>
             </div>

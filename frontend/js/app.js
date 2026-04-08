@@ -6,6 +6,7 @@ const API_BASE = window.location.hostname === 'localhost' || window.location.hos
 const elements = {
     chainBody: document.getElementById('chain-body'),
     indexSelect: document.getElementById('index-select'),
+    expirySelect: document.getElementById('expiry-select'),
     signalCard: document.getElementById('signal-card'),
     targetVal: document.getElementById('target-val'),
     slVal: document.getElementById('sl-val'),
@@ -16,7 +17,7 @@ const elements = {
     alertList: document.getElementById('alert-list')
 };
 
-async function fetchDashboardData(symbol) {
+async function fetchDashboardData(symbol, targetExpiry = '') {
     // Basic frontend guard
     if (localStorage.getItem('auth') !== 'true') {
         window.location.href = 'login.html';
@@ -24,7 +25,10 @@ async function fetchDashboardData(symbol) {
     }
 
     try {
-        const response = await fetch(`${API_BASE}/dashboard?symbol=${symbol}`);
+        let url = `${API_BASE}/dashboard?symbol=${symbol}`;
+        if (targetExpiry) url += `&expiry=${encodeURIComponent(targetExpiry)}`;
+
+        const response = await fetch(url);
         if (response.status === 401) {
             localStorage.removeItem('auth');
             window.location.href = 'login.html';
@@ -32,14 +36,25 @@ async function fetchDashboardData(symbol) {
         }
         if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
-        updateUI(data);
+        updateUI(data, targetExpiry === '');
     } catch (error) {
         console.error("Error fetching data:", error);
     }
 }
 
-function updateUI(data) {
+function updateUI(data, isInitialLoadForSymbol) {
     if(!data) return;
+
+    if (isInitialLoadForSymbol && data.availableExpiries) {
+        elements.expirySelect.innerHTML = '';
+        data.availableExpiries.forEach(exp => {
+            const opt = document.createElement('option');
+            opt.value = exp;
+            opt.textContent = exp;
+            if (exp === data.expiryDate) opt.selected = true;
+            elements.expirySelect.appendChild(opt);
+        });
+    }
 
     // 0. Update Timestamp, Spot Price and Expiry
     document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
@@ -112,15 +127,19 @@ function getColorClassForBuildup(buildup) {
 
 function init() {
     const symbol = elements.indexSelect.value;
-    fetchDashboardData(symbol);
+    fetchDashboardData(symbol, '');
 
     elements.indexSelect.addEventListener('change', (e) => {
-        fetchDashboardData(e.target.value);
+        fetchDashboardData(e.target.value, '');
+    });
+
+    elements.expirySelect.addEventListener('change', (e) => {
+        fetchDashboardData(elements.indexSelect.value, e.target.value);
     });
 
     // Refresh every 10 seconds
     setInterval(() => {
-        fetchDashboardData(elements.indexSelect.value);
+        fetchDashboardData(elements.indexSelect.value, elements.expirySelect.value);
     }, 10000);
 }
 
