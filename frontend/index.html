@@ -11,8 +11,10 @@
     <header class="top-nav">
         <div class="logo">JULES TRADING <span>PRO</span></div>
         <div class="market-status" style="display:flex; gap: 15px; align-items:center;">
-            <div class="spot-ticker" style="font-family: 'Outfit', sans-serif; font-size: 1.2rem; font-weight: 800; color: #fff; background: rgba(0,0,0,0.3); padding: 5px 12px; border-radius: 8px;">
-                SPOT: <span id="spot-price-display" style="color: var(--accent-blue);">--</span>
+            <div class="spot-ticker" style="font-family: 'Outfit', sans-serif; font-size: 1.2rem; font-weight: 800; color: #fff; background: rgba(0,0,0,0.3); padding: 5px 12px; border-radius: 8px; display:flex; gap:10px;">
+                <span>SPOT: <span id="spot-price-display" style="color: var(--accent-blue);">--</span></span>
+                <span style="color:var(--border-color)">|</span>
+                <span style="font-size: 1rem; padding-top:2px;">EXP: <span id="expiry-display" style="color: var(--bearish-color);">--</span></span>
             </div>
             <div style="display:flex; align-items:center; gap:8px; background: var(--bullish-bg); padding: 5px 12px; border-radius: 20px;">
                 <span class="pulse-dot"></span>

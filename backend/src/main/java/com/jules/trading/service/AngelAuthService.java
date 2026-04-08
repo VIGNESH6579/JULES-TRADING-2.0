@@ -12,12 +12,15 @@ import java.util.Map;
 public class AngelAuthService {
 
     private String jwtToken;
+    private String activeApiKey;
     private boolean isConnected = false;
 
     public boolean login(LoginRequest request) {
         if (request.getApiKey() == null || request.getTotpSecret() == null) {
             return false; 
         }
+
+        this.activeApiKey = request.getApiKey();
 
         try {
             RestTemplate restTemplate = new RestTemplate();
@@ -65,5 +68,9 @@ public class AngelAuthService {
 
     public String getJwtToken() {
         return jwtToken;
+    }
+
+    public String getActiveApiKey() {
+        return activeApiKey;
     }
 }

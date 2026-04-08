@@ -41,9 +41,10 @@ async function fetchDashboardData(symbol) {
 function updateUI(data) {
     if(!data) return;
 
-    // 0. Update Timestamp and Spot Price
+    // 0. Update Timestamp, Spot Price and Expiry
     document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
     document.getElementById('spot-price-display').textContent = data.spotPrice.toFixed(2);
+    document.getElementById('expiry-display').textContent = `${data.expiryDate} (${data.daysToExpiry} DTE)`;
 
     // 1. Update Signal
     const { signal } = data;

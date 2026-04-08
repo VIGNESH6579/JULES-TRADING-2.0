@@ -7,6 +7,8 @@ import java.util.List;
 public class DashboardResponse {
     private String symbol;
     private double spotPrice;
+    private String expiryDate;
+    private int daysToExpiry;
     private Signal signal;
     private Analytics analytics;
     private List<OptionRow> chain;

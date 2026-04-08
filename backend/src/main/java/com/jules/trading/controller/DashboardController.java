@@ -5,6 +5,8 @@ import com.jules.trading.dto.DashboardResponse.*;
 import com.jules.trading.service.DataFetchService;
 import com.jules.trading.service.OptionsAnalyzerService;
 import com.jules.trading.service.AngelAuthService;
+import com.jules.trading.service.AngelMarketDataService;
+import com.jules.trading.service.ExpiryCalculator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,15 +32,14 @@ public class DashboardController {
 
     @Autowired
     private AngelAuthService angelAuthService;
+    
+    @Autowired
+    private AngelMarketDataService marketDataService;
+    
+    @Autowired
+    private ExpiryCalculator expiryCalculator;
 
     private final Random random = new Random();
-    
-    // Simulate Spot drift
-    private double currentNifty = 22400.0;
-    private double currentBankNifty = 47800.0;
-    private double currentSensex = 73900.0;
-    private double currentCrudeOil = 6800.0;
-    private double currentNatGas = 220.0;
 
     @GetMapping("/dashboard")
     public ResponseEntity<?> getDashboard(@RequestParam(defaultValue = "NIFTY") String symbol) {
@@ -49,8 +50,12 @@ public class DashboardController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
         }
 
-        double spotPrice = updateAndGetSpot(symbol);
+        // Live Market Call
+        double spotPrice = marketDataService.getLiveSpotPrice(symbol, angelAuthService.getActiveApiKey());
         
+        // Expiry Call
+        ExpiryCalculator.ExpiryInfo expiry = expiryCalculator.getExpiryFor(symbol);
+
         List<OptionRow> chain = dataService.getSimulatedOptionChain(symbol, spotPrice);
         Analytics analytics = analyzerService.computeAnalytics(chain);
         Signal signal = analyzerService.generateSignal(analytics, spotPrice, chain);
@@ -58,33 +63,12 @@ public class DashboardController {
         DashboardResponse response = new DashboardResponse();
         response.setSymbol(symbol);
         response.setSpotPrice(Math.round(spotPrice * 100.0) / 100.0);
+        response.setExpiryDate(expiry.dateString);
+        response.setDaysToExpiry(expiry.daysToExpiry);
         response.setChain(chain);
         response.setAnalytics(analytics);
         response.setSignal(signal);
 
         return ResponseEntity.ok(response);
-    }
-
-    private double updateAndGetSpot(String symbol) {
-        double drift = (random.nextDouble() - 0.5) * 15; // Random walk -7.5 to +7.5 points
-        switch (symbol.toUpperCase()) {
-            case "NIFTY":
-                currentNifty += drift;
-                return currentNifty;
-            case "BANKNIFTY":
-                currentBankNifty += (drift * 2.5);
-                return currentBankNifty;
-            case "SENSEX":
-                currentSensex += (drift * 3.5);
-                return currentSensex;
-            case "CRUDEOIL":
-                currentCrudeOil += (drift * 0.5); // Smaller drift
-                return currentCrudeOil;
-            case "NATGAS":
-                currentNatGas += (drift * 0.05); // Tiny drift
-                return currentNatGas;
-            default:
-                return currentNifty;
-        }
     }
 }
